@@ -1,51 +1,89 @@
-export function runJavaScriptSnippet(sourceCode: string, timeoutMs = 1500): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const worker = new Worker(
-      URL.createObjectURL(
-        new Blob(
-          [
-            `
-            self.fetch = () => Promise.reject(new Error('Network calls are disabled in this runner.'));
-            self.importScripts = () => { throw new Error('importScripts is disabled in this runner.'); };
-            const logs = [];
-            console.log = (...args) => logs.push(args.map(String).join(' '));
-            console.error = (...args) => logs.push(args.map(String).join(' '));
-            self.onmessage = async (event) => {
-              try {
-                const result = await Function('"use strict"; return (async () => {\\n' + event.data + '\\n})()')();
-                self.postMessage({ ok: true, output: [...logs, result === undefined ? '' : String(result)].filter(Boolean).join('\\n') });
-              } catch (error) {
-                self.postMessage({ ok: false, error: error instanceof Error ? error.message : String(error) });
-              }
-            };
-            `,
-          ],
-          { type: 'text/javascript' },
-        ),
-      ),
-    );
+import { newQuickJSWASMModuleFromVariant, shouldInterruptAfterDeadline, type QuickJSWASMModule } from 'quickjs-emscripten-core';
+import quickJsBrowserVariant from '@jitl/quickjs-singlefile-browser-release-sync';
 
-    const timeout = window.setTimeout(() => {
-      worker.terminate();
-      reject(new Error('JavaScript runner timed out.'));
-    }, timeoutMs);
+let quickJsModulePromise: Promise<QuickJSWASMModule> | null = null;
 
-    worker.onmessage = (event: MessageEvent<{ ok: boolean; output?: string; error?: string }>) => {
-      window.clearTimeout(timeout);
-      worker.terminate();
+function getQuickJsModule() {
+  quickJsModulePromise ??= newQuickJSWASMModuleFromVariant(quickJsBrowserVariant);
+  return quickJsModulePromise;
+}
 
-      if (event.data.ok) resolve(event.data.output || '(no output)');
-      else reject(new Error(event.data.error || 'JavaScript runner failed.'));
-    };
+export async function runJavaScriptSnippet(sourceCode: string, timeoutMs = 1500): Promise<string> {
+  const QuickJS = await getQuickJsModule();
+  const runtime = QuickJS.newRuntime();
+  runtime.setMemoryLimit(64 * 1024 * 1024);
+  runtime.setMaxStackSize(1024 * 320);
+  runtime.setInterruptHandler(shouldInterruptAfterDeadline(Date.now() + timeoutMs));
 
-    worker.onerror = () => {
-      window.clearTimeout(timeout);
-      worker.terminate();
-      reject(new Error('JavaScript runner failed.'));
-    };
+  const context = runtime.newContext();
+  const logs: string[] = [];
 
-    worker.postMessage(sourceCode);
+  const logHandle = context.newFunction('log', (...args) => {
+    logs.push(args.map((arg) => String(context.dump(arg))).join(' '));
   });
+  const consoleHandle = context.newObject();
+  context.setProp(consoleHandle, 'log', logHandle);
+  context.setProp(consoleHandle, 'error', logHandle);
+  context.setProp(context.global, 'console', consoleHandle);
+  consoleHandle.dispose();
+  logHandle.dispose();
+
+  let disposed = false;
+  const disposeOnce = () => {
+    if (disposed) return;
+    disposed = true;
+    try {
+      let pending = runtime.executePendingJobs();
+      while (!pending.error && pending.value > 0) {
+        pending = runtime.executePendingJobs();
+      }
+      pending.error?.dispose();
+    } catch {
+      // best-effort drain before teardown; fall through to dispose regardless
+    }
+    context.dispose();
+    runtime.dispose();
+  };
+
+  const drainJobs = () => {
+    let pending = runtime.executePendingJobs();
+    while (!pending.error && pending.value > 0) {
+      pending = runtime.executePendingJobs();
+    }
+    if (pending.error) {
+      const message = context.dump(pending.error);
+      pending.error.dispose();
+      throw new Error(typeof message === 'string' ? message : JSON.stringify(message));
+    }
+  };
+
+  const run = (async () => {
+    const evalResult = context.evalCode(`"use strict"; (async () => {\n${sourceCode}\n})()`);
+    const promiseHandle = context.unwrapResult(evalResult);
+
+    const settledPromise = context.resolvePromise(promiseHandle);
+    drainJobs();
+    const settledResult = await settledPromise;
+    promiseHandle.dispose();
+
+    const resultHandle = context.unwrapResult(settledResult);
+    const value = context.dump(resultHandle);
+    resultHandle.dispose();
+
+    return [...logs, value === undefined ? '' : String(value)].filter(Boolean).join('\n') || '(no output)';
+  })();
+
+  const timeout = new Promise<never>((_resolve, reject) => {
+    setTimeout(() => reject(new Error('JavaScript runner timed out.')), timeoutMs);
+  });
+
+  try {
+    return await Promise.race([run, timeout]);
+  } catch (error) {
+    throw new Error(error instanceof Error ? error.message : String(error));
+  } finally {
+    disposeOnce();
+  }
 }
 
 export function buildHtmlPreview(input: string): string {
