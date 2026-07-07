@@ -165,7 +165,7 @@ function MarketplaceNav({
 
   return (
     <div className="border-b border-line bg-white">
-      <div className="mx-auto flex max-w-6xl overflow-x-auto px-4 sm:px-6 lg:px-8" aria-label="Tool categories">
+      <div className="mx-auto flex max-w-6xl overflow-x-auto overflow-y-hidden px-4 sm:px-6 lg:px-8" aria-label="Tool categories">
         {categories.map((category) => {
           const isActive = activeCategory === category.id;
           return (
@@ -174,7 +174,7 @@ function MarketplaceNav({
               type="button"
               aria-pressed={isActive}
               onClick={() => onCategory(category.id)}
-              className={`min-h-14 shrink-0 border-x border-line px-5 text-sm font-semibold transition ${
+              className={`h-14 shrink-0 border-x border-line px-5 text-sm font-semibold transition ${
                 isActive ? 'bg-ink text-white' : 'bg-white text-ink hover:bg-paper'
               }`}
             >
