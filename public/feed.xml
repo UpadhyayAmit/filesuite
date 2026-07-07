@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>File Suite</title>
+    <link>https://filesuite.dev/</link>
+    <description>Private browser-first developer utilities for JSON, JWT, code, files, and secure local workflows.</description>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 08 Jul 2026 00:00:00 GMT</lastBuildDate>
+    <item>
+      <title>File Suite dashboard</title>
+      <link>https://filesuite.dev/</link>
+      <guid>https://filesuite.dev/</guid>
+      <pubDate>Wed, 08 Jul 2026 00:00:00 GMT</pubDate>
+      <description>Search browser-only developer utilities with usage counts, emoji reactions, and private-tool positioning.</description>
+    </item>
+    <item>
+      <title>Cookie consent for optional Clarity analytics</title>
+      <link>https://filesuite.dev/privacy/</link>
+      <guid>https://filesuite.dev/privacy/#cookie-consent</guid>
+      <pubDate>Wed, 08 Jul 2026 00:00:00 GMT</pubDate>
+      <description>Microsoft Clarity loads only after cookie consent. Tool files, input, and output are not sent to analytics.</description>
+    </item>
+    <item>
+      <title>Neon, Clerk, and Zoho integrations</title>
+      <link>https://filesuite.dev/about/</link>
+      <guid>https://filesuite.dev/about/#integrations</guid>
+      <pubDate>Wed, 08 Jul 2026 00:00:00 GMT</pubDate>
+      <description>Optional account-backed comments, emoji reactions, helpful votes, usage counts, and Zoho-powered enquiry email are now wired.</description>
+    </item>
+    <item>
+      <title>SQL Online Compiler</title>
+      <link>https://filesuite.dev/tools/sql-online-compiler/</link>
+      <guid>https://filesuite.dev/tools/sql-online-compiler/</guid>
+      <pubDate>Wed, 08 Jul 2026 00:00:00 GMT</pubDate>
+      <description>Run SQLite queries locally with sql.js and SQLite WASM loaded from File Suite static assets.</description>
+    </item>
+    <item>
+      <title>Merge PDFs</title>
+      <link>https://filesuite.dev/tools/pdf-merge/</link>
+      <guid>https://filesuite.dev/tools/pdf-merge/</guid>
+      <pubDate>Wed, 08 Jul 2026 00:00:00 GMT</pubDate>
+      <description>Merge PDF files locally with QPDF WASM in a Web Worker. PDF file picking supports .pdf and application/pdf.</description>
+    </item>
+    <item>
+      <title>JSON Formatter</title>
+      <link>https://filesuite.dev/tools/json-formatter/</link>
+      <guid>https://filesuite.dev/tools/json-formatter/</guid>
+      <pubDate>Tue, 07 Jul 2026 00:00:00 GMT</pubDate>
+      <description>Format, validate, and inspect JSON locally in the browser.</description>
+    </item>
+    <item>
+      <title>Python Online Compiler</title>
+      <link>https://filesuite.dev/tools/python-online-compiler/</link>
+      <guid>https://filesuite.dev/tools/python-online-compiler/</guid>
+      <pubDate>Tue, 07 Jul 2026 00:00:00 GMT</pubDate>
+      <description>Run Python snippets locally with browser-loaded Pyodide assets.</description>
+    </item>
+  </channel>
+</rss>
