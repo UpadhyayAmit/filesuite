@@ -30,9 +30,9 @@ const footerGroups = [
 export function SiteFooter() {
   return (
     <footer className="border-t border-line bg-white">
-      <div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 sm:px-6 md:grid-cols-[1.2fr_2fr] lg:px-8">
-        <div>
-          <div className="flex items-center gap-2 text-lg font-semibold text-ink">
+      <div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 text-center sm:px-6 md:grid-cols-[1.2fr_2fr] md:text-left lg:px-8">
+        <div className="grid justify-items-center md:justify-items-start">
+          <div className="flex items-center justify-center gap-2 text-lg font-semibold text-ink md:justify-start">
             <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[linear-gradient(135deg,#ff6b35,#2563eb_58%,#7c3aed)] text-white">
               <ShieldCheck className="h-5 w-5 text-white" aria-hidden="true" />
             </span>
@@ -41,7 +41,7 @@ export function SiteFooter() {
           <p className="mt-3 max-w-sm text-sm leading-6 text-muted">
             Private developer utilities for API debugging, AI engineering, files, and secure local workflows.
           </p>
-          <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-line bg-paper px-3 py-2 text-xs font-semibold text-ink">
+          <div className="mt-4 inline-flex items-center justify-center gap-2 rounded-full border border-line bg-paper px-3 py-2 text-xs font-semibold text-ink">
             <ShieldCheck className="h-4 w-4 text-sage" aria-hidden="true" />
             Browser-first tools, optional account features
           </div>
@@ -53,7 +53,7 @@ export function SiteFooter() {
               <ul className="mt-3 grid gap-2 text-sm">
                 {group.links.map(([label, href]) => (
                   <li key={href}>
-                    <Link href={href} className="inline-flex items-center gap-2 text-muted transition hover:text-ink">
+                    <Link href={href} className="inline-flex items-center justify-center gap-2 text-muted transition hover:text-ink md:justify-start">
                       {group.title === 'Contact' ? <MessageSquare className="h-3.5 w-3.5" aria-hidden="true" /> : null}
                       {label}
                     </Link>

@@ -164,8 +164,9 @@ function MarketplaceNav({
   const categories = [{ id: 'all', label: 'All Tools' }, ...TOOL_CATEGORIES.map((category) => ({ id: category.id, label: category.name }))];
 
   return (
-    <div className="border-b border-line bg-white">
-      <div className="mx-auto flex max-w-6xl overflow-x-auto overflow-y-hidden px-4 sm:px-6 lg:px-8" aria-label="Tool categories">
+    <div className="sticky top-16 z-30 border-b border-line bg-white/95 backdrop-blur">
+      <div className="mx-auto max-w-7xl px-3 py-2 sm:px-6 lg:px-8">
+        <div className="flex gap-2 overflow-x-auto overflow-y-hidden [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:justify-center" aria-label="Tool categories">
         {categories.map((category) => {
           const isActive = activeCategory === category.id;
           return (
@@ -174,14 +175,15 @@ function MarketplaceNav({
               type="button"
               aria-pressed={isActive}
               onClick={() => onCategory(category.id)}
-              className={`h-14 shrink-0 border-x border-line px-5 text-sm font-semibold transition ${
-                isActive ? 'bg-ink text-white' : 'bg-white text-ink hover:bg-paper'
+              className={`h-10 shrink-0 rounded-full border px-4 text-sm font-semibold transition sm:px-5 ${
+                isActive ? 'border-ink bg-ink text-white shadow-soft' : 'border-line bg-white text-ink hover:border-blue-200 hover:bg-paper'
               }`}
             >
               {category.label}
             </button>
           );
         })}
+        </div>
       </div>
     </div>
   );

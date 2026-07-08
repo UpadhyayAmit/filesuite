@@ -28,7 +28,7 @@ export function Sidebar({ categories, activeToolId, onSelectTool, onDashboard }:
   }, [categories, query]);
 
   return (
-    <aside className="border-r border-line bg-paper lg:h-[calc(100vh-65px)] lg:overflow-y-auto">
+    <aside className="hidden border-r border-line bg-paper lg:block lg:h-[calc(100vh-65px)] lg:overflow-y-auto">
       <div className="sticky top-0 z-10 grid gap-3 border-b border-line bg-paper px-4 py-4">
         <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted">Utilities</p>
         <label className="relative">

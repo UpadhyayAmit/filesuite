@@ -15,11 +15,6 @@ const securityHeaders = [
     key: 'Permissions-Policy',
     value: 'camera=(), microphone=(), geolocation=(), payment=(), usb=()',
   },
-  {
-    key: 'Content-Security-Policy',
-    value:
-      "default-src 'self'; script-src 'self' 'wasm-unsafe-eval' https://www.clarity.ms; worker-src 'self' blob:; child-src 'self' blob:; frame-src 'self' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data: https://www.clarity.ms https://c.clarity.ms; font-src 'self'; connect-src 'self' https://www.clarity.ms https://c.clarity.ms https://*.clarity.ms; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'",
-  },
 ];
 
 /** @type {import('next').NextConfig} */

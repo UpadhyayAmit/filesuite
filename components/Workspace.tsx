@@ -1,6 +1,6 @@
 'use client';
 
-import { Copy, Download, FileCheck2, Loader2 } from 'lucide-react';
+import { ChevronRight, Copy, Download, FileCheck2, LayoutGrid, Loader2, Search, X } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { DropZone } from './DropZone';
 import { Sidebar } from './Sidebar';
@@ -62,6 +62,7 @@ export function Workspace({ initialToolId }: WorkspaceProps) {
   const [resizeHeight, setResizeHeight] = useState(768);
   const [hashAlgorithm, setHashAlgorithm] = useState<HashAlgorithm>('SHA-256');
   const [isBusy, setIsBusy] = useState(false);
+  const [mobilePickerOpen, setMobilePickerOpen] = useState(false);
 
   const activeTool = useMemo(() => (activeToolId ? findTool(activeToolId) : null), [activeToolId]);
 
@@ -265,6 +266,23 @@ export function Workspace({ initialToolId }: WorkspaceProps) {
     <main className="grid min-h-[calc(100vh-65px)] bg-[radial-gradient(circle_at_top_left,rgba(255,107,53,0.08),transparent_28%),linear-gradient(180deg,#f8fbff,#f7f8fb)] lg:grid-cols-[300px_minmax(0,1fr)]">
       <Sidebar categories={TOOL_CATEGORIES} activeToolId={activeToolId} onSelectTool={selectTool} onDashboard={() => setActiveToolId('')} />
       <section className="min-w-0 p-4 sm:p-6 lg:p-7">
+        <MobileToolBreadcrumb
+          activeTool={activeTool}
+          onOpenPicker={() => setMobilePickerOpen(true)}
+        />
+        <MobileToolPicker
+          activeToolId={activeToolId}
+          open={mobilePickerOpen}
+          onClose={() => setMobilePickerOpen(false)}
+          onDashboard={() => {
+            setActiveToolId('');
+            setMobilePickerOpen(false);
+          }}
+          onSelectTool={(toolId) => {
+            selectTool(toolId);
+            setMobilePickerOpen(false);
+          }}
+        />
         <div className="mx-auto grid max-w-[1680px] gap-5 xl:grid-cols-[minmax(0,1fr)_280px]">
           <div className="grid min-w-0 gap-6">
               <ToolHeader tool={activeTool} />
@@ -323,6 +341,184 @@ export function Workspace({ initialToolId }: WorkspaceProps) {
       </section>
     </main>
   );
+}
+
+function MobileToolBreadcrumb({ activeTool, onOpenPicker }: { activeTool: ToolDefinition; onOpenPicker: () => void }) {
+  const category = findCategoryForTool(activeTool.id);
+
+  return (
+    <div className="mb-4 lg:hidden">
+      <button
+        type="button"
+        onClick={onOpenPicker}
+        className="flex w-full items-center justify-between gap-3 rounded-2xl border border-line bg-white px-4 py-3 text-left shadow-[0_14px_38px_rgba(22,34,51,0.08)]"
+        aria-haspopup="dialog"
+      >
+        <span className="min-w-0">
+          <span className="flex min-w-0 items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-muted">
+            Utilities
+            <ChevronRight className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+            <span className="truncate">{category?.name ?? activeTool.category}</span>
+          </span>
+          <span className="mt-1 flex min-w-0 items-center gap-2 text-base font-semibold text-ink">
+            <activeTool.icon className="h-4 w-4 shrink-0 text-coral" aria-hidden="true" />
+            <span className="truncate">{activeTool.name}</span>
+          </span>
+        </span>
+        <span className="shrink-0 rounded-full bg-[#eef4ff] px-3 py-1 text-xs font-semibold text-blue-700">Change</span>
+      </button>
+    </div>
+  );
+}
+
+function MobileToolPicker({
+  activeToolId,
+  open,
+  onClose,
+  onDashboard,
+  onSelectTool,
+}: {
+  activeToolId: string;
+  open: boolean;
+  onClose: () => void;
+  onDashboard: () => void;
+  onSelectTool: (toolId: string) => void;
+}) {
+  const [query, setQuery] = useState('');
+
+  useEffect(() => {
+    if (!open) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === 'Escape') onClose();
+    }
+
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener('keydown', onKeyDown);
+    };
+  }, [onClose, open]);
+
+  useEffect(() => {
+    if (!open) setQuery('');
+  }, [open]);
+
+  const filteredCategories = useMemo(() => {
+    const normalized = query.trim().toLowerCase();
+    if (!normalized) return TOOL_CATEGORIES;
+
+    return TOOL_CATEGORIES
+      .map((category) => ({
+        ...category,
+        tools: category.tools.filter((tool) =>
+          [tool.name, tool.description, tool.slug, ...tool.keywords].some((value) => value.toLowerCase().includes(normalized)),
+        ),
+      }))
+      .filter((category) => category.tools.length > 0);
+  }, [query]);
+
+  if (!open) return null;
+
+  return (
+    <div className="fixed inset-0 z-[80] lg:hidden" role="dialog" aria-modal="true" aria-label="Choose a utility">
+      <button type="button" className="absolute inset-0 bg-ink/35 backdrop-blur-sm" aria-label="Close tool picker" onClick={onClose} />
+      <div className="absolute inset-x-3 top-3 max-h-[calc(100vh-24px)] overflow-hidden rounded-2xl border border-line bg-paper shadow-[0_28px_90px_rgba(22,34,51,0.24)]">
+        <div className="flex items-center justify-between gap-3 border-b border-line bg-white px-4 py-3">
+          <div className="min-w-0">
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted">Utilities</p>
+            <h2 className="truncate text-lg font-semibold text-ink">Choose a tool</h2>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-line bg-white text-muted transition hover:text-ink"
+            aria-label="Close tool picker"
+          >
+            <X className="h-5 w-5" aria-hidden="true" />
+          </button>
+        </div>
+
+        <div className="grid gap-3 border-b border-line bg-paper px-4 py-3">
+          <label className="relative">
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" aria-hidden="true" />
+            <input
+              autoFocus
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder="Search tools"
+              className="h-11 w-full rounded-xl border border-line bg-white pl-10 pr-3 text-sm text-ink outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-100"
+            />
+          </label>
+          <button
+            type="button"
+            onClick={onDashboard}
+            className={`flex items-center gap-2 rounded-xl px-3 py-3 text-left text-sm font-semibold transition ${
+              activeToolId === '' ? 'bg-moss text-white shadow-soft' : 'bg-white text-ink hover:text-moss'
+            }`}
+          >
+            <LayoutGrid className="h-4 w-4" aria-hidden="true" />
+            All tools dashboard
+          </button>
+        </div>
+
+        <div className="max-h-[calc(100vh-205px)] overflow-y-auto px-4 py-4">
+          {filteredCategories.length > 0 ? (
+            <nav className="grid gap-5" aria-label="Mobile utility categories">
+              {filteredCategories.map((category) => (
+                <div key={category.id}>
+                  <div className="mb-2 flex items-center gap-2 text-sm font-semibold text-moss">
+                    <category.icon className="h-4 w-4" aria-hidden="true" />
+                    {category.name}
+                  </div>
+                  <div className="grid gap-2">
+                    {category.tools.map((tool) => (
+                      <button
+                        key={tool.id}
+                        type="button"
+                        onClick={() => onSelectTool(tool.id)}
+                        className={`flex items-center gap-3 rounded-xl border px-3 py-3 text-left transition ${
+                          activeToolId === tool.id
+                            ? 'border-moss bg-moss text-white shadow-soft'
+                            : 'border-line bg-white text-ink hover:border-blue-200 hover:text-moss'
+                        }`}
+                      >
+                        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#eef4ff] text-blue-700 ring-1 ring-line">
+                          <tool.icon className="h-5 w-5" aria-hidden="true" />
+                        </span>
+                        <span className="min-w-0 flex-1">
+                          <span className="block truncate text-sm font-semibold">{tool.name}</span>
+                          <span className={`mt-0.5 block truncate text-xs ${activeToolId === tool.id ? 'text-white/75' : 'text-muted'}`}>
+                            {tool.description}
+                          </span>
+                        </span>
+                        {tool.status !== 'live' ? (
+                          <span className="shrink-0 rounded border border-current px-1.5 py-0.5 text-[10px] uppercase opacity-70">
+                            {tool.status === 'planned' ? 'Plan' : 'AI'}
+                          </span>
+                        ) : null}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </nav>
+          ) : (
+            <div className="rounded-2xl border border-line bg-white p-5 text-sm text-muted">
+              No tools found. Try JSON, JWT, PDF, image, SQL, or timestamp.
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function findCategoryForTool(toolId: string) {
+  return TOOL_CATEGORIES.find((category) => category.tools.some((tool) => tool.id === toolId));
 }
 
 function trackToolUse(tool: ToolDefinition, action?: string) {
