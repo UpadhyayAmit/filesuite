@@ -2,14 +2,14 @@
 <rss version="2.0">
   <channel>
     <title>File Suite</title>
-    <link>https://filesuite.dev/</link>
+    <link>https://www.filesuite.dev/</link>
     <description>Private browser-first developer utilities and product updates.</description>
     <language>en-us</language>
     <lastBuildDate>Wed, 08 Jul 2026 00:00:00 GMT</lastBuildDate>
     <item>
       <title>Latest File Suite updates</title>
-      <link>https://filesuite.dev/</link>
-      <guid>https://filesuite.dev/#2026-07-08-updates</guid>
+      <link>https://www.filesuite.dev/</link>
+      <guid>https://www.filesuite.dev/#2026-07-08-updates</guid>
       <pubDate>Wed, 08 Jul 2026 00:00:00 GMT</pubDate>
       <description>Added cookie consent for optional Clarity analytics, Neon-backed engagement, Zoho enquiry email, and fixes for SQL Online Compiler and PDF merge.</description>
     </item>

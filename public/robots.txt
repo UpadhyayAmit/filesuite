@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://filesuite.dev/sitemap.xml
+Sitemap: https://www.filesuite.dev/sitemap.xml

@@ -979,7 +979,7 @@ function makeSampleInput(toolId: string): string {
     case 'base64':
       return 'filesuite.dev';
     case 'url-codec':
-      return 'https://filesuite.dev/tools/json-formatter?debug=true&source=api payload';
+      return 'https://www.filesuite.dev/tools/json-formatter?debug=true&source=api payload';
     case 'timestamp':
       return `${Math.floor(Date.now() / 1000)}`;
     case 'hash':

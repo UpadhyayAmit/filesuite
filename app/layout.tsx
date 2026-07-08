@@ -8,6 +8,8 @@ import { SiteHeader } from '@/components/SiteHeader';
 import { clerkAppearance } from '@/lib/clerkAppearance';
 import { CLERK_CONFIGURED } from '@/lib/clerkConfig';
 
+const siteUrl = 'https://www.filesuite.dev';
+
 const sora = Sora({
   subsets: ['latin'],
   variable: '--font-sans',
@@ -22,8 +24,19 @@ const jetBrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: 'filesuite.dev',
   description: 'Private browser-first developer utilities for JSON, JWT, encoding, timestamps, diffs, API data, files, and AI engineering workflows.',
+  alternates: {
+    canonical: '/',
+  },
+  openGraph: {
+    title: 'filesuite.dev',
+    description: 'Private browser-first developer utilities for JSON, JWT, encoding, timestamps, diffs, API data, files, and AI engineering workflows.',
+    url: siteUrl,
+    siteName: 'File Suite',
+    type: 'website',
+  },
   icons: {
     icon: '/favicon.svg',
   },

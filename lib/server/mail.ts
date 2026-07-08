@@ -42,7 +42,7 @@ export async function sendEnquiryEmail(options: EnquiryMailOptions) {
 
   const from = process.env.CONTACT_FROM_EMAIL ?? process.env.ZOHO_SMTP_USER ?? 'connect@filesuite.dev';
   const to = process.env.CONTACT_TO_EMAIL ?? 'connect@filesuite.dev';
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://filesuite.dev';
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.filesuite.dev';
   const visitorName = escapeHtml(options.visitorName);
   const visitorEmail = escapeHtml(options.visitorEmail);
   const subject = escapeHtml(options.subject);
