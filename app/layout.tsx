@@ -24,6 +24,9 @@ const jetBrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: 'filesuite.dev',
   description: 'Private browser-first developer utilities for JSON, JWT, encoding, timestamps, diffs, API data, files, and AI engineering workflows.',
+  icons: {
+    icon: '/favicon.svg',
+  },
   robots: {
     index: true,
     follow: true,

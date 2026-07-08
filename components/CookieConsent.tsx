@@ -1,10 +1,10 @@
 'use client';
 
-import Script from 'next/script';
 import { Cookie, ShieldCheck } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 type Consent = 'accepted' | 'declined' | null;
+type ClarityFunction = ((...args: unknown[]) => void) & { q?: unknown[][] };
 
 const COOKIE_NAME = 'filesuite_cookie_consent';
 const ONE_YEAR_SECONDS = 60 * 60 * 24 * 365;
@@ -19,6 +19,23 @@ export function CookieConsent() {
     setReady(true);
   }, []);
 
+  useEffect(() => {
+    if (consent !== 'accepted' || !clarityId || document.getElementById('microsoft-clarity-script')) return;
+
+    if (!window.clarity) {
+      const clarityQueue: ClarityFunction = (...args: unknown[]) => {
+        (clarityQueue.q = clarityQueue.q ?? []).push(args);
+      };
+      window.clarity = clarityQueue;
+    }
+
+    const script = document.createElement('script');
+    script.id = 'microsoft-clarity-script';
+    script.async = true;
+    script.src = `https://www.clarity.ms/tag/${encodeURIComponent(clarityId)}`;
+    document.head.appendChild(script);
+  }, [clarityId, consent]);
+
   function saveConsent(value: Exclude<Consent, null>) {
     document.cookie = `${COOKIE_NAME}=${value}; path=/; max-age=${ONE_YEAR_SECONDS}; samesite=lax`;
     setConsent(value);
@@ -26,18 +43,6 @@ export function CookieConsent() {
 
   return (
     <>
-      {consent === 'accepted' && clarityId ? (
-        <Script id="microsoft-clarity" strategy="afterInteractive">
-          {`
-            (function(c,l,a,r,i,t,y){
-              c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-              t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-              y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-            })(window, document, "clarity", "script", "${clarityId}");
-          `}
-        </Script>
-      ) : null}
-
       {ready && consent === null ? (
         <section className="fixed inset-x-4 bottom-4 z-[90] mx-auto max-w-3xl rounded-2xl border border-line bg-white p-4 text-ink shadow-[0_22px_80px_rgba(22,34,51,0.18)] md:flex md:items-center md:gap-5">
           <div className="flex min-w-0 gap-3">
@@ -73,6 +78,12 @@ export function CookieConsent() {
       ) : null}
     </>
   );
+}
+
+declare global {
+  interface Window {
+    clarity?: ClarityFunction;
+  }
 }
 
 function readConsentCookie(): Consent {

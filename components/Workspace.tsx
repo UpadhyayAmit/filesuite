@@ -489,16 +489,32 @@ function ToolControls(props: ToolControlsProps) {
       {props.activeTool.id === 'html-css-js-editor' && props.output ? (
         <div className="grid gap-2">
           <p className="text-sm font-semibold text-ink">Sandbox preview</p>
-          <iframe
-            title="HTML CSS JS preview"
-            sandbox="allow-scripts"
-            srcDoc={props.output}
-            className="h-80 w-full rounded-lg border border-line bg-white shadow-soft"
-          />
+          <SandboxPreview html={props.output} />
         </div>
       ) : null}
 
     </div>
+  );
+}
+
+function SandboxPreview({ html }: { html: string }) {
+  const [url, setUrl] = useState('');
+
+  useEffect(() => {
+    const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+    const nextUrl = URL.createObjectURL(blob);
+    setUrl(nextUrl);
+
+    return () => URL.revokeObjectURL(nextUrl);
+  }, [html]);
+
+  return (
+    <iframe
+      title="HTML CSS JS preview"
+      sandbox="allow-scripts"
+      src={url || 'about:blank'}
+      className="h-80 w-full rounded-lg border border-line bg-white shadow-soft"
+    />
   );
 }
 
