@@ -1,0 +1,43 @@
+name: ai-plugin
+
+on:
+  push:
+    paths: ["plugins/**", ".claude-plugin/**", ".pre-commit-hooks.yaml", ".github/workflows/ai-plugin.yml"]
+  pull_request:
+    paths: ["plugins/**", ".claude-plugin/**", ".pre-commit-hooks.yaml", ".github/workflows/ai-plugin.yml"]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        python: ["3.9", "3.13"]
+        include:
+          - os: windows-latest
+            python: "3.13"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Unit tests
+        run: python -m unittest discover -s plugins/filesuite-devtools/tests -v
+      - name: Manifests are valid JSON
+        run: python plugins/filesuite-devtools/hooks/scripts/validate_structured.py .claude-plugin/marketplace.json plugins/filesuite-devtools/.claude-plugin/plugin.json plugins/filesuite-devtools/hooks/hooks.json
+
+  validate-plugin:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: claude plugin validate
+        run: |
+          npx -y @anthropic-ai/claude-code plugin validate .
+          npx -y @anthropic-ai/claude-code plugin validate plugins/filesuite-devtools

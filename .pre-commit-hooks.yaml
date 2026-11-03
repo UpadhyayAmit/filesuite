@@ -1,0 +1,18 @@
+# Consumers add this repo to their .pre-commit-config.yaml:
+#   - repo: https://github.com/UpadhyayAmit/filesuite
+#     rev: <tag>
+#     hooks:
+#       - id: filesuite-guard-secrets
+#       - id: filesuite-validate-structured
+- id: filesuite-guard-secrets
+  name: filesuite guard secrets
+  description: Block private keys, cloud/API tokens and credentialed URLs from being committed.
+  entry: plugins/filesuite-devtools/hooks/scripts/guard_secrets.py
+  language: script
+  types: [text]
+- id: filesuite-validate-structured
+  name: filesuite validate JSON/JSONL/TOML
+  description: Fail on unparsable JSON, JSONL and TOML (skips JSON-with-comments files).
+  entry: plugins/filesuite-devtools/hooks/scripts/validate_structured.py
+  language: script
+  files: \.(json|jsonl|ndjson|toml)$

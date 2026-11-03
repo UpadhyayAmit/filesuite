@@ -54,3 +54,7 @@ Thumbs.db
 *.db
 *.pdf.tmp
 screenshots/
+
+# Python
+__pycache__/
+*.pyc

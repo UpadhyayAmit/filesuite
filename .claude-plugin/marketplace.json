@@ -1,0 +1,16 @@
+{
+  "name": "filesuite",
+  "owner": { "name": "Amit Upadhyay", "url": "https://www.filesuite.dev" },
+  "metadata": {
+    "description": "Local-first developer tools from File Suite, packaged as agent skills and hooks."
+  },
+  "plugins": [
+    {
+      "name": "filesuite-devtools",
+      "source": "./plugins/filesuite-devtools",
+      "description": "JWT audit, JSON Schema inference, context budgeting, secret guard and JSON/TOML validation hooks.",
+      "version": "0.1.0",
+      "category": "development"
+    }
+  ]
+}
