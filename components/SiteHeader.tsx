@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ShieldCheck } from 'lucide-react';
+import { Bot, ShieldCheck } from 'lucide-react';
 import { NavBarAuth } from './NavBarAuth';
 
 export function SiteHeader() {
@@ -12,7 +12,16 @@ export function SiteHeader() {
           </span>
           <span>File Suite</span>
         </Link>
-        <NavBarAuth />
+        <div className="flex items-center gap-3">
+          <Link
+            href="/agents"
+            className="hidden items-center gap-1.5 rounded-full border border-line px-3 py-1.5 text-sm font-semibold text-ink transition hover:border-sage sm:inline-flex"
+          >
+            <Bot className="h-4 w-4 text-[#6d28d9]" aria-hidden="true" />
+            For agents
+          </Link>
+          <NavBarAuth />
+        </div>
       </div>
     </header>
   );

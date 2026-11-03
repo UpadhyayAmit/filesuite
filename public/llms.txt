@@ -1,0 +1,27 @@
+# File Suite
+
+> Private, browser-first developer tools (JSON, JWT, schema, tokens, diff, cron, files). Tool content is processed in the browser and never stored. Several tools are also available as agent skills and hooks.
+
+## Agent skills & hooks
+
+Install in Claude Code:
+
+    /plugin marketplace add UpadhyayAmit/filesuite
+    /plugin install filesuite-devtools@filesuite
+
+- [Agent Skills & Hooks overview](https://www.filesuite.dev/agents)
+- jwt-inspector (skill): decode and audit JWTs locally
+- json-schema-infer (skill): merge JSON/JSONL samples into a JSON Schema, with a strict mode for LLM tools
+- context-budget (skill): estimate tokens per file, check context-window fit, plan RAG chunks
+- guard_secrets (hook): block keys and tokens before they are written or committed
+- validate_structured (hook): re-parse JSON/JSONL/TOML after every edit
+- Source: https://github.com/UpadhyayAmit/filesuite/tree/main/plugins/filesuite-devtools
+
+## Browser tools
+
+- [JSON Formatter](https://www.filesuite.dev/tools/json-formatter)
+- [JWT Decoder](https://www.filesuite.dev/tools/jwt-decoder)
+- [JSON Schema Generator](https://www.filesuite.dev/tools/json-schema-generator)
+- [LLM Token Estimator](https://www.filesuite.dev/tools/llm-token-estimator)
+- [Prompt Diff](https://www.filesuite.dev/tools/prompt-diff)
+- [All tools](https://www.filesuite.dev/)

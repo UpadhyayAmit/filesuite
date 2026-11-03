@@ -1,0 +1,9 @@
+{
+  "name": "filesuite-devtools",
+  "version": "0.1.0",
+  "description": "File Suite developer tools as agent skills and safety hooks: JWT audit, JSON Schema inference, context/token budgeting, secret guard, JSON/TOML validation. Local-only, Python stdlib.",
+  "author": { "name": "Amit Upadhyay" },
+  "homepage": "https://www.filesuite.dev",
+  "repository": "https://github.com/UpadhyayAmit/filesuite",
+  "keywords": ["jwt", "json-schema", "tokens", "rag", "secrets", "hooks", "local-first"]
+}

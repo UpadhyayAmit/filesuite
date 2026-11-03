@@ -1,0 +1,29 @@
+{
+  "description": "File Suite guards: block secrets before they are written; re-validate JSON/TOML after every edit.",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/scripts/guard_secrets.py\" --claude-hook",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/scripts/validate_structured.py\" --claude-hook",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}

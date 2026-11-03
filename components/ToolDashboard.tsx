@@ -1,7 +1,8 @@
 'use client';
 
+import { getAgentIntegration } from './agent-data';
 import Link from 'next/link';
-import { CheckCircle2, ChevronDown, MousePointerClick, Search, ShieldCheck, SmilePlus, Sparkles, Zap } from 'lucide-react';
+import { Bot, CheckCircle2, ChevronDown, MousePointerClick, Search, ShieldCheck, SmilePlus, Sparkles, Zap } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { ALL_TOOLS, FEATURED_TOOLS, TOOL_CATEGORIES, searchTools, type ToolDefinition } from './tool-data';
 
@@ -298,6 +299,15 @@ function MarketplaceToolCard({
           <MousePointerClick className="h-3.5 w-3.5 text-blue-700" aria-hidden="true" />
           {stats?.uses ?? 0}
         </span>
+        {getAgentIntegration(tool.id) ? (
+          <span
+            className="inline-flex items-center gap-1 rounded-full bg-[#f1ecff] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-[#6d28d9]"
+            title="Also available as an agent skill or hook"
+          >
+            <Bot className="h-3 w-3" aria-hidden="true" />
+            Agent
+          </span>
+        ) : null}
         {statusLabel ? (
           <span className={`text-xs font-bold ${statusClass}`}>{statusLabel}</span>
         ) : null}

@@ -22,6 +22,24 @@ Build the wedge around high-frequency developer work:
 
 PDF, image, ZIP, EPUB, and podcast tools stay visible in the catalog, but they are secondary to the developer/API/AI-engineering workflow.
 
+## Agent Skills & Hooks
+
+The developer tools are also available inside coding agents as a local-only Claude Code plugin (`plugins/filesuite-devtools`). It contains skills, Claude Code hooks and git pre-commit hooks, all plain Python stdlib scripts.
+
+```text
+/plugin marketplace add UpadhyayAmit/filesuite
+/plugin install filesuite-devtools@filesuite
+```
+
+The plugin includes:
+
+- **Skills:** `jwt-inspector`, `json-schema-infer`, `context-budget`.
+- **Hooks:**
+  - a secret guard that runs before every write,
+  - a JSON/TOML validator that runs after every edit.
+
+The same hooks are available to any repo through `.pre-commit-hooks.yaml`. See `plugins/filesuite-devtools/README.md` for usage and `docs/ai/STRATEGY.md` for the distribution plan and roadmap.
+
 ## Guarantees
 
 - No cookies for local file/content processing.
@@ -140,6 +158,9 @@ modules/devtools/            JSON, JWT, cron, YAML, XML, Base64, URL, UUID, hash
 modules/filetools/           CSV, Excel, diff, ZIP APIs
 wasm/                        WASM integration notes and source-build guidance
 public/wasm/                 Runtime-served WASM binaries copied at install time
+plugins/filesuite-devtools/  Agent skills + Claude Code / pre-commit hooks (Python, stdlib only)
+.claude-plugin/              Marketplace manifest: makes this repo installable as a plugin source
+docs/ai/                     AI tooling strategy and roadmap
 ```
 
 ## Latest Implementation Notes
