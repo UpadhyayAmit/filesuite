@@ -58,3 +58,4 @@ screenshots/
 # Python
 __pycache__/
 *.pyc
+.playwright-mcp/

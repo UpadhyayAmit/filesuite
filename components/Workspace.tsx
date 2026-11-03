@@ -7,6 +7,8 @@ import { Sidebar } from './Sidebar';
 import { ToolDashboard } from './ToolDashboard';
 import { ToolInfoSections, ToolRightRail } from './ToolPageWidgets';
 import { ToolNotice } from './ToolNotice';
+import { AgentPanel } from './AgentPanel';
+import { getAgentIntegration } from './agent-data';
 import { TOOL_CATEGORIES, findTool, type ToolDefinition } from './tool-data';
 import { convertCurl } from '@/modules/api/curl';
 import { validateOpenApi } from '@/modules/api/openapi';
@@ -65,6 +67,7 @@ export function Workspace({ initialToolId }: WorkspaceProps) {
   const [mobilePickerOpen, setMobilePickerOpen] = useState(false);
 
   const activeTool = useMemo(() => (activeToolId ? findTool(activeToolId) : null), [activeToolId]);
+  const agentIntegration = activeTool ? getAgentIntegration(activeTool.id) : undefined;
 
   useEffect(() => {
     setInput(makeSampleInput(activeToolId));
@@ -334,6 +337,7 @@ export function Workspace({ initialToolId }: WorkspaceProps) {
                 {status && <p className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800">{status}</p>}
                 {error && <p className="rounded-xl border border-coral/35 bg-coral/10 px-4 py-3 text-sm font-medium text-ink">{error}</p>}
               </section>
+              {agentIntegration ? <AgentPanel integration={agentIntegration} /> : null}
               <ToolInfoSections tool={activeTool} />
           </div>
           <ToolRightRail tool={activeTool} />

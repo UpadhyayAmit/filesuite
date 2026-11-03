@@ -9,6 +9,7 @@ const footerGroups = [
       ['JWT Decoder', '/tools/jwt-decoder'],
       ['Regex Tester', '/tools/regex-tester'],
       ['PDF Merge', '/tools/pdf-merge'],
+      ['Agent Skills & Hooks', '/agents'],
     ],
   },
   {
